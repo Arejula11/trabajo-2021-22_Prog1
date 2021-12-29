@@ -97,22 +97,38 @@ void fichBucle(string usuario, int mesinicio, int mesfinal, string rutaFicheros[
         n++;
     }
 }
+void pedirNombreFichero(string& nombreEscritura){
 
-void leerFichero(string rutaFicheros[], int elementos){
+    cout << "Escribe el nombre del fichero del informe" << endl;
+    cout << "(presione solo ENTRAR para escribirlo en la pantalla: ";
+    cin >> nombreEscritura;
+    
+
+
+
+}
+bool leerFichero(string rutaFicheros[], int elementos){
     ifstream f;
     for(int i=0; i<elementos;i++){
-        f.open(rutaFicheros[i]);
+        string nombreFichero=rutaFicheros[i];
+        f.open(nombreFichero);
         if(f.is_open()){
-            cout << "corrector"<<endl;
+
         }
         else{
-            cout << "error" <<" "<<i<<endl;
+            cerr << "No se ha podido leer el fichero " <<'"'<<nombreFichero<<'"'<<"."<<endl;
+            return false;
         }
     }
     
-
+    return true;
 }
 
+void crearFichero(string nombreFichero){
+
+    ofstream g;
+    g.open(nombreFichero);
+}
 
 /*
  * ¡ESCRIBID LA ESPECIFICACIÓN DE ESTA FUNCIÓN!
@@ -121,10 +137,19 @@ int main() {
     int mesinicio;
     int mesfinal;
     string usuario;
-    int elementos = mesfinal - mesinicio;
+
     pedirDatos(usuario,mesinicio,mesfinal);
-    string rutaFicheros[11];
+    int elementos = mesfinal - mesinicio + 1;
+
+    string rutaFicheros[elementos];
     fichBucle(usuario,mesinicio,mesfinal,rutaFicheros);
-    leerFichero(rutaFicheros, elementos);
+    string nombreEscritura;
+    if(leerFichero(rutaFicheros, elementos)){
+        pedirNombreFichero(nombreEscritura);
+    }else{
+        return 1;
+    }
+
+    crearFichero(nombreEscritura);
     return 0;
 }
