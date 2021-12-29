@@ -1,6 +1,6 @@
 /******************************************************************************\
  * Programación 1. Trabajo obligatorio curso 2021-22
- * Autores: ¡¡¡PONED AQUÍ VUESTROS NOMBRES!!!
+ * Autores: Pablo Ernesto Angusto Delgado y Miguel Aréjula Aísa
  * Ultima revisión: ¡¡¡!!!
  * Resumen: ¡¡¡!!!
  * Nota: El código de este programa está repartido en varios módulos.
@@ -42,10 +42,89 @@ void escribirInforme(ostream& f,
                      const unsigned mesInicial, const unsigned mesFinal) {
 }
 
+void pedirmes(int& mesinicio, int& mesfinal){
+    
+    cout << "Escriba el mes inicial y el final: ";   
+    cin >> mesinicio >> mesfinal;
+
+}
+void pedirDatos(string& usuario,int& mesinicio, int& mesfinal){
+    cout << "Escriba el nombre del usuario: ";
+    
+    cin >> usuario;
+    cout << endl;
+    
+    
+    pedirmes(mesinicio,mesfinal);
+    while(mesinicio > mesfinal || mesinicio < 1 || mesfinal > 11){
+        
+        if(mesinicio > mesfinal){
+            cout <<"El mes inicial tiene que ser menor o igual que el mes final."<<endl;
+            
+        }
+        
+        if( mesinicio<1 || mesinicio>11){
+            cout <<"El mes inicial tiene que estar entre 1 y 11."<<endl;
+        }
+        
+        if( mesfinal<1 || mesfinal > 11){
+            cout << "El mes final tiene que estar entre 1 y 11" << endl;
+            
+        }
+
+        pedirmes(mesinicio,mesfinal);
+        
+    }
+}
+
+string convRuta(string usuario, int mesinicio, int mesfinal){
+    string rutainicio="datos/";
+    string rutayear="-2021-";
+    string rutafinal=".csv";
+    
+        string mes = (to_string(mesinicio));
+        if(mesinicio<10){
+            mes = "0" + mes;
+        }
+        return rutainicio + usuario + rutayear + mes + rutafinal;
+        
+}
+
+void fichBucle(string usuario, int mesinicio, int mesfinal, string rutaFicheros[]){
+    int n=0;
+    for(int i=mesinicio; i<=mesfinal; i++){
+        rutaFicheros[n]=convRuta(usuario, i, mesfinal);
+        n++;
+    }
+}
+
+void leerFichero(string rutaFicheros[], int elementos){
+    ifstream f;
+    for(int i=0; i<elementos;i++){
+        f.open(rutaFicheros[i]);
+        if(f.is_open()){
+            cout << "corrector"<<endl;
+        }
+        else{
+            cout << "error" <<" "<<i<<endl;
+        }
+    }
+    
+
+}
+
 
 /*
  * ¡ESCRIBID LA ESPECIFICACIÓN DE ESTA FUNCIÓN!
  */
 int main() {
+    int mesinicio;
+    int mesfinal;
+    string usuario;
+    int elementos = mesfinal - mesinicio;
+    pedirDatos(usuario,mesinicio,mesfinal);
+    string rutaFicheros[11];
+    fichBucle(usuario,mesinicio,mesfinal,rutaFicheros);
+    leerFichero(rutaFicheros, elementos);
     return 0;
 }
