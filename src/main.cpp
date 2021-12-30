@@ -97,14 +97,17 @@ void fichBucle(string usuario, int mesinicio, int mesfinal, string rutaFicheros[
         n++;
     }
 }
-void pedirNombreFichero(string& nombreEscritura){
+bool pedirNombreFichero(string& nombreEscritura){
 
-    cout << "Escribe el nombre del fichero del informe" << endl;
+    cout << "Escribe el nombre del fichero del informe"<<endl; 
     cout << "(presione solo ENTRAR para escribirlo en la pantalla: ";
     cin >> nombreEscritura;
-    
-
-
+    if(nombreEscritura== "salto"){
+        return true;
+    }else{
+        return false;
+    }
+            
 
 }
 bool leerFichero(string rutaFicheros[], int elementos){
@@ -114,8 +117,7 @@ bool leerFichero(string rutaFicheros[], int elementos){
         f.open(nombreFichero);
         if(f.is_open()){
 
-        }
-        else{
+        }else{
             cerr << "No se ha podido leer el fichero " <<'"'<<nombreFichero<<'"'<<"."<<endl;
             return false;
         }
@@ -128,6 +130,11 @@ void crearFichero(string nombreFichero){
 
     ofstream g;
     g.open(nombreFichero);
+}
+
+void escribirCabecera(int mesinicio, int mesfinal){
+    cout<<"INFORME DEL CLIENTE "<< '"'<<"A"<<'"'<< " ENTRE LOS MESES "<<mesinicio<<" Y " << mesfinal << " DE 2021" << endl;
+    cout << "-------------------------------------------------------------------------------------" << endl;
 }
 
 /*
@@ -145,11 +152,18 @@ int main() {
     fichBucle(usuario,mesinicio,mesfinal,rutaFicheros);
     string nombreEscritura;
     if(leerFichero(rutaFicheros, elementos)){
-        pedirNombreFichero(nombreEscritura);
+        if(pedirNombreFichero(nombreEscritura)){
+            escribirCabecera(mesinicio,mesfinal);
+            
+        }else{
+            //Escribir en fichero ficheros
+            //crearFichero(nombreEscritura);
+        }
     }else{
         return 1;
     }
 
-    crearFichero(nombreEscritura);
+    
+    
     return 0;
 }

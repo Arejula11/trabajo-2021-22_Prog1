@@ -1,4 +1,5 @@
 #include "fichs-electricos.hpp"
+#include "fecha.hpp"
 /*
  * Pre:  «f» está asociado con un fichero externo que cumple con la sintaxis de
  *       la regla <fichero-precios> establecida en el enunciado y está en
@@ -13,7 +14,34 @@
  *       La función ha devuelto «true» si no se han terminado los datos del
  *       fichero en el intento de lectura y «false» en caso contrario.
  */
-bool leerPrecioHorario(istream& f, Fecha& fecha, unsigned& hora, double& precio);
+bool leerPrecioHorario(istream& f, Fecha& fecha, unsigned& hora, double& precio){
+    string ignorar;
+    unsigned diffhora;
+    getline(f,ignorar,';');
+    getline(f,ignorar,';');
+    getline(f,ignorar,';');
+    getline(f,ignorar,';');
+    f >> precio;
+    f.get();
+    f >> fecha.agno;
+    f.get();
+    f >> fecha.mes;
+    f.get();
+    f >> fecha.dia;
+    f.get();
+    f >> hora;
+    getline(f,ignorar,'+');
+    f >> diffhora;
+    hora = hora + diffhora;
+    
+    if(!f.eof()){
+        return true;
+    }else{
+        return false;
+        
+    }
+
+}
 
 
 /*
@@ -33,7 +61,33 @@ bool leerPrecioHorario(istream& f, Fecha& fecha, unsigned& hora, double& precio)
  */
 bool leerPrecios(const string nombreFichero,
                  const unsigned mesInicial, const unsigned mesFinal,
-                 GastoDiario registros[]);
+                 GastoDiario registros[]){
+
+    ifstream f;
+    Fecha fecha;
+    Fecha fechaInicial;
+    fechaInicial.agno=2021;
+    fechaInicial.mes=mesInicial;
+    fechaInicial.dia=1;
+    
+    unsigned hora;
+    double precio;
+    f.open(nombreFichero);
+    if(f.is_open()){
+        
+        while(leerPrecioHorario(f,fecha,hora, precio)){
+            if(fecha.mes>mesInicial && fecha.mes<mesFinal){
+                    registros[diasTranscurridos(fechaInicial, fecha)].precioE[hora]=precio;
+                
+            }
+        
+        }
+        return true;
+
+    }else{
+        return false;
+    }
+}
 
 
 /*
@@ -51,7 +105,37 @@ bool leerPrecios(const string nombreFichero,
  *       fichero en el intento de lectura y «false» en caso contrario.
  */
 bool leerConsumoHorario(istream& f,
-                        Fecha& fecha, unsigned& hora, double& consumo);
+                        Fecha& fecha, unsigned& hora, double& consumo){
+        string ignorar;
+        getline(f,ignorar, ';');
+        f >> fecha.dia;
+        f.get();
+        f >> fecha.mes;
+        f.get();
+        f >> fecha.agno;
+        f.get();
+        f >> hora;
+        f.get();
+        f >> consumo;
+        if(!f.eof()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+            
+string convRuta(string usuario, int mesinicio, int mesfinal){
+    string rutainicio="datos/";
+    string rutayear="-2021-";
+    string rutafinal=".csv";
+    
+        string mes = (to_string(mesinicio));
+        if(mesinicio<10){
+            mes = "0" + mes;
+        }
+        return rutainicio + usuario + rutayear + mes + rutafinal;
+        
+}
 
 
 /*
@@ -72,4 +156,27 @@ bool leerConsumoHorario(istream& f,
  */
 bool leerConsumos(const string nombreCliente,
                   const unsigned mesInicial, const unsigned mesFinal,
-                  GastoDiario registros[]);
+                  GastoDiario registros[]){
+    ifstream f;
+    Fecha fecha;
+    Fecha fechaInicial;
+    fechaInicial.agno=2021;
+    fechaInicial.mes=mesInicial;
+    fechaInicial.dia=1;
+    unsigned hora;
+    double consumo;
+    for(unsigned i=mesInicial; i<=mesFinal;i++){
+            f.open(convRuta(nombreCliente, i, mesFinal));
+            if(f.is_open()){
+                while(leerConsumoHorario(f,fecha,hora,consumo)){
+                    registros[diasTranscurridos(fechaInicial, fecha)].consumoE[hora]=consumo;
+                }
+                return true;
+            }else{
+                return false;
+            }
+            
+        }
+
+
+}
