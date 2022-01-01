@@ -124,18 +124,6 @@ bool leerConsumoHorario(istream& f,
         }
     }
             
-string convRuta(string usuario, int mesinicio, int mesfinal){
-    string rutainicio="datos/";
-    string rutayear="-2021-";
-    string rutafinal=".csv";
-    
-        string mes = (to_string(mesinicio));
-        if(mesinicio<10){
-            mes = "0" + mes;
-        }
-        return rutainicio + usuario + rutayear + mes + rutafinal;
-        
-}
 
 
 /*
@@ -166,7 +154,7 @@ bool leerConsumos(const string nombreCliente,
     unsigned hora;
     double consumo;
     for(unsigned i=mesInicial; i<=mesFinal;i++){
-            f.open(convRuta(nombreCliente, i, mesFinal));
+            f.open(nombreCliente);
             if(f.is_open()){
                 while(leerConsumoHorario(f,fecha,hora,consumo)){
                     registros[diasTranscurridos(fechaInicial, fecha)].consumoE[hora]=consumo;

@@ -1,4 +1,6 @@
 #include "tarifas-comerciales.hpp"
+#include <iostream>
+using namespace std;
 
 /*
  * Pre:  ---
@@ -7,7 +9,29 @@
  *       aplicado los costes especificados por la tarifa del parámetro «tarifa».
  */
 double costeDiarioTarifaPlanaTramos(const GastoDiario& gasto,
-                                    const TarifaPlanaTramos tarifa);
+                                    const TarifaPlanaTramos tarifa){
+    double costetotal=0;
+    for(int i=10;i<14;i++){
+        costetotal = costetotal + gasto.consumoE[i] * tarifa.punta;
+    }
+    for(int i=18;i<22;i++){
+        costetotal = costetotal + gasto.consumoE[i] * tarifa.punta;
+    }
+    for(int i=8;i<10;i++){
+        costetotal = costetotal + gasto.consumoE[i] * tarifa.llano;
+    }
+    for(int i=14;i<16;i++){
+        costetotal = costetotal + gasto.consumoE[i] * tarifa.llano;
+    }
+    for(int i=20;i<24;i++){
+        costetotal = costetotal + gasto.consumoE[i] * tarifa.llano;
+    }
+    for(int i=0;i<8;i++){
+        costetotal = costetotal + gasto.consumoE[i] * tarifa.valle;
+    }
+    return costetotal;
+
+}
 
 
 /*
@@ -19,4 +43,12 @@ double costeDiarioTarifaPlanaTramos(const GastoDiario& gasto,
  *       parámetro «tarifa».
  */
 double costeTarifaPlanaTramos(const GastoDiario regDiario[],
-                        const unsigned numRegs, const TarifaPlanaTramos tarifa);
+                        const unsigned numRegs, const TarifaPlanaTramos tarifa){
+    double costetotal=0;
+    for(unsigned i=0; i<numRegs; i++){
+        costetotal +=  costeDiarioTarifaPlanaTramos(regDiario[i], tarifa);
+    }
+    return costetotal;
+                        
+                        
+}

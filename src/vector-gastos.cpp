@@ -1,5 +1,7 @@
 #include "vector-gastos.hpp"
-
+#include "gasto-diario.hpp"
+#include <iostream>
+using namespace std;
 /*
  * Pre:  Las primeras «numRegs» componentes del vector «regsDiarios» almacenan
  *       datos de precios horarios de energía eléctrica.
@@ -9,7 +11,25 @@
  *       promedio diario mínimo.
  */
 void diaMasBarato(const GastoDiario regsDiarios[], const unsigned numRegs,
-                  Fecha& dia, double& precioMedioMinimo);
+                  Fecha& dia, double& precioMedioMinimo){
+
+        GastoDiario gasto;
+        double aux = 0;
+        unsigned diaCaro;
+        for ( int i=0; i<numRegs;i++){
+            gasto = regsDiarios[i];
+            if (aux>costeMedio(gasto)){
+
+                diaCaro = i;
+                aux = costeMedio(gasto);
+            }
+
+
+        }
+        dia.dia = diaCaro ;
+        precioMedioMinimo = aux;
+
+}
 
 /*
  * Pre:  Las primeras «numRegs» componentes del vector «regsDiarios» almacenan
@@ -20,8 +40,20 @@ void diaMasBarato(const GastoDiario regsDiarios[], const unsigned numRegs,
  *       registró ese mayor precio horario y al parámetro «precioMaximo», el
  *       valor de ese precio máximo.
  */
-void horaMasCara(const GastoDiario regsDiarios[], const unsigned numRegs,
-                 Fecha& dia, unsigned& hora, double& precioMaximo);
+void horaMasCara( const GastoDiario regsDiarios[], const unsigned numRegs,
+                 Fecha& dia, unsigned& hora, double& precioMaximo){
+    double preciomayor;
+    for(unsigned n=0;n<numRegs;n++){
+        preciomayor=regsDiarios[n].precioE[horaMasCara(regsDiarios[n])];
+        if(precioMaximo<preciomayor){
+            precioMaximo=preciomayor;
+            dia.dia=n;
+            hora=horaMasCara(regsDiarios[n]);
+        }
+    }
+    
+
+}
 
 /*
  * Pre:  Las primeras «numRegs» componentes del vector «regsDiarios» almacenan
@@ -30,7 +62,21 @@ void horaMasCara(const GastoDiario regsDiarios[], const unsigned numRegs,
  *       datos de las primeras «numRegs» componentes del vector «regsDiarios».
  */
 double costeTerminoVariable(const GastoDiario regsDiarios[],
-                            const unsigned numRegs);
+                            const unsigned numRegs){
+
+    GastoDiario gasto;
+    double coste;
+    for ( int i=0; i<numRegs;i++){
+        gasto = regsDiarios[i];
+        coste+=costeDiario(gasto);  
+    }
+
+    return coste;      
+          
+
+
+
+}
 
 /*
  * Pre:  Las primeras «numRegs» componentes del vector «regsDiarios» almacenan
@@ -42,4 +88,11 @@ double costeTerminoVariable(const GastoDiario regsDiarios[],
  *       precisamente en la hora más barata de ese día.
  */
 double costeMinimoPosible(const GastoDiario regsDiarios[], 
-                          const unsigned numRegs);
+                          const unsigned numRegs){
+    double gastototal=0;
+    for(unsigned i=0; i<numRegs; i++){
+        gastototal = gastototal + costeDiarioMinimo(regsDiarios[i]);
+    }
+    return gastototal;
+
+}

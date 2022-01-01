@@ -110,13 +110,20 @@ bool pedirNombreFichero(string& nombreEscritura){
             
 
 }
-bool leerFichero(string rutaFicheros[], int elementos){
+bool leerFichero(string rutaFicheros[], int elementos, int mesInicial, int mesFinal, GastoDiario registros[]){
     ifstream f;
     for(int i=0; i<elementos;i++){
         string nombreFichero=rutaFicheros[i];
         f.open(nombreFichero);
         if(f.is_open()){
-
+            //hay que cerrar los flujos
+            if(leerConsumos(nombreFichero,mesInicial,mesFinal,registros)){
+                
+            }else{
+                cerr << "No se ha podido leer el fichero " <<'"'<<nombreFichero<<'"'<<"."<<endl;
+                return false;
+            }
+            
         }else{
             cerr << "No se ha podido leer el fichero " <<'"'<<nombreFichero<<'"'<<"."<<endl;
             return false;
@@ -137,6 +144,32 @@ void escribirCabecera(int mesinicio, int mesfinal){
     cout << "-------------------------------------------------------------------------------------" << endl;
 }
 
+bool leerFichTafs(){
+    ifstream f;
+    f.open("datos/tarifas-2021-ene-nov.csv");
+    if(f.is_open()){
+        
+    }else{
+        cerr << "No se ha podido leer el fichero " <<'"'<<"tarifas-2021-ene-nov.csv"<<'"'<<"."<<endl;
+        return false;
+    }
+}
+
+
+void masBarato (){
+    cout << "El día completo más barato fue el ";
+}
+
+int diasTotales(int mesinicio, int mesfinal){
+    int dias = 0;
+    for (int i=mesinicio;i<=mesfinal;i++){
+
+        dias+=diasDelMes(i,AGNO_ACTUAL);
+    }
+    return dias;
+
+}
+
 /*
  * ¡ESCRIBID LA ESPECIFICACIÓN DE ESTA FUNCIÓN!
  */
@@ -151,7 +184,9 @@ int main() {
     string rutaFicheros[elementos];
     fichBucle(usuario,mesinicio,mesfinal,rutaFicheros);
     string nombreEscritura;
-    if(leerFichero(rutaFicheros, elementos)){
+   
+    GastoDiario registros[diasTotales(mesinicio,mesfinal)];
+    if(leerFichero(rutaFicheros, elementos,mesinicio,mesfinal,registros)){
         if(pedirNombreFichero(nombreEscritura)){
             escribirCabecera(mesinicio,mesfinal);
             
