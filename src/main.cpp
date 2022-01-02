@@ -173,24 +173,67 @@ int diasTotales(int mesinicio, int mesfinal){
 
 }
 
-/*Fecha masBarato (int mesinicio, int mesfinal, GastoDiario registros[]){
-    double costes[diasTotales(mesinicio, mesfinal)];
-    for(int i=0; i<diasTotales(mesinicio, mesfinal); i++){
-        costes[i]=costeDiario(registros[i]);
+Fecha masCaro(unsigned& diamascaro, int mesinicio, int mesfinal, GastoDiario registros[]){
+    double costeshoras[diasTotales(mesinicio, mesfinal)*24];
+    for(int i=0;  i<diasTotales(mesinicio, mesfinal); i++){
+        costeshoras[i]=registros[i].precioE[horaMasCara(registros[i])];
     }
+    double costeaux = costeshoras[0];
+    for(int i=1; i<diasTotales(mesinicio, mesfinal); i++){
+        if(costeaux>costeshoras[i]){
+            costeaux=costeshoras[i];
+            diamascaro=i;
+        }
+    }
+    cout << diamascaro << ", " << costeshoras[diamascaro] << endl;
+    
+    
+    Fecha masCaro;
+    for(int n=mesinicio; n<=mesfinal; n++){
+        
+        if (diamascaro>diasDelMes(n,2021)){
+            diamascaro -=diasDelMes(n,2021);
+
+        }else{
+            masCaro.mes=n;
+            n=mesfinal+1;
+        }
+    }
+    
+    masCaro.dia = diamascaro;
+    
+    masCaro.agno = 2021;
+    return masCaro;
+}
+
+
+Fecha masBarato (unsigned& diamasbarato, int mesinicio, int mesfinal, GastoDiario registros[]){
+    double costes[diasTotales(mesinicio, mesfinal)];
+    
+    for(int i=0; i<diasTotales(mesinicio, mesfinal); i++){
+        costes[i]=costeMedio(registros[i]);
+        
+    }
+
     double costeaux = costes[0];
-    unsigned diamasbarato=0;
     for(int i=1; i<diasTotales(mesinicio, mesfinal); i++){
         if(costeaux>costes[i]){
             costeaux=costes[i];
             diamasbarato=i;
         }
     }
+    cout << diamasbarato << ", " << costes[diamasbarato] << endl;
+    
+    
     Fecha masBarato;
     for(int n=mesinicio; n<=mesfinal; n++){
-        while(diamasbarato>diasDelMes(n, 2021)){
-            diamasbarato = diamasbarato - diasDelMes(n, 2021);
+        
+        if (diamasbarato>diasDelMes(n,2021)){
+            diamasbarato -=diasDelMes(n,2021);
+
+        }else{
             masBarato.mes=n;
+            n=mesfinal+1;
         }
     }
     
@@ -200,10 +243,11 @@ int diasTotales(int mesinicio, int mesfinal){
     return masBarato;
 }
 
-void mostrarPrimerRes(Fecha barato){
-
-    cout << "El día completo más barato fue el " << barato.dia << "-" << barato.mes << "-" << barato.agno << "." << endl;
-}*/
+void mostrarPrimerRes(Fecha barato, GastoDiario registro[], unsigned& diamasbarato,Fecha caro, unsigned& diamascaro){
+    cout << "El día completo más barato fue el " << barato.dia+1 << "-" << barato.mes << "-" << barato.agno << ". Precio medio: "<< costeMedio(registro[diamasbarato])/1000 <<" €/kWh"<<endl; 
+    cout << "La hora más cara tuvo lugar el " <<caro.dia+1<< "-" << caro.mes << "-" << caro.agno<<" a las "<<" . Precio: "<<" €/kWh"<<endl;
+    
+}
 
 
 
@@ -228,7 +272,9 @@ int main() {
         if(pedirNombreFichero(nombreEscritura)){
             escribirCabecera(mesinicio,mesfinal);
             if(leerFichTafs(mesinicio, mesfinal, registros)){
-                //mostrarPrimerRes
+                unsigned diamasbarato=0;
+                unsigned diamascaro=0;
+                mostrarPrimerRes(masBarato(diamasbarato, mesinicio, mesfinal, registros),registros, diamasbarato,masCaro(diamascaro, mesinicio, mesfinal, registros), diamascaro);
             }
 
             
