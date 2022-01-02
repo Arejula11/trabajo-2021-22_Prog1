@@ -32,8 +32,9 @@ bool leerPrecioHorario(istream& f, Fecha& fecha, unsigned& hora, double& precio)
     f >> hora;
     getline(f,ignorar,'+');
     f >> diffhora;
-    hora = hora + diffhora;
-    
+    //hora = hora + diffhora;
+    getline(f,ignorar);
+
     if(!f.eof()){
         return true;
     }else{
@@ -69,14 +70,15 @@ bool leerPrecios(const string nombreFichero,
     fechaInicial.agno=2021;
     fechaInicial.mes=mesInicial;
     fechaInicial.dia=1;
-    
+    string ignorar;
     unsigned hora;
     double precio;
     f.open(nombreFichero);
     if(f.is_open()){
-        
+
+        getline(f,ignorar);
         while(leerPrecioHorario(f,fecha,hora, precio)){
-            if(fecha.mes>mesInicial && fecha.mes<mesFinal){
+            if(fecha.mes>=mesInicial && fecha.mes<=mesFinal){
                     registros[diasTranscurridos(fechaInicial, fecha)].precioE[hora]=precio;
                 
             }
@@ -108,6 +110,7 @@ bool leerConsumoHorario(istream& f,
                         Fecha& fecha, unsigned& hora, double& consumo){
         string ignorar;
         getline(f,ignorar, ';');
+        
         f >> fecha.dia;
         f.get();
         f >> fecha.mes;
@@ -117,6 +120,7 @@ bool leerConsumoHorario(istream& f,
         f >> hora;
         f.get();
         f >> consumo;
+        getline(f,ignorar);
         if(!f.eof()){
             return true;
         }else{
@@ -153,18 +157,20 @@ bool leerConsumos(const string nombreCliente,
     fechaInicial.dia=1;
     unsigned hora;
     double consumo;
-    for(unsigned i=mesInicial; i<=mesFinal;i++){
-            f.open(nombreCliente);
-            if(f.is_open()){
-                while(leerConsumoHorario(f,fecha,hora,consumo)){
-                    registros[diasTranscurridos(fechaInicial, fecha)].consumoE[hora]=consumo;
-                }
-                return true;
+    string ignorar;
+    unsigned diastrans;
+        f.open(nombreCliente);
+        if(f.is_open()){
+            getline(f,ignorar);
+            while(leerConsumoHorario(f,fecha,hora,consumo)){
+                diastrans=diasTranscurridos(fechaInicial, fecha);
+                registros[diastrans].consumoE[hora]=consumo;
+            }
+            return true;
             }else{
                 return false;
             }
             
-        }
 
 
 }

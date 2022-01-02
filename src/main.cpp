@@ -24,6 +24,7 @@
 #include "fichs-electricos.hpp"
 #include "vector-gastos.hpp"
 #include "tarifas-comerciales.hpp"
+//#include "fecha.hpp"
 using namespace std;
 
 
@@ -39,8 +40,7 @@ using namespace std;
 void escribirInforme(ostream& f,
                      const GastoDiario regDiarios[], const unsigned numRegs,
                      const string nombreCliente, 
-                     const unsigned mesInicial, const unsigned mesFinal) {
-}
+                     const unsigned mesInicial, const unsigned mesFinal);
 
 void pedirmes(int& mesinicio, int& mesfinal){
     
@@ -144,20 +144,23 @@ void escribirCabecera(int mesinicio, int mesfinal){
     cout << "-------------------------------------------------------------------------------------" << endl;
 }
 
-bool leerFichTafs(){
+bool leerFichTafs(int mesInicial, int mesFinal, GastoDiario registros[]){
     ifstream f;
-    f.open("datos/tarifas-2021-ene-nov.csv");
+    string nombreFichero = "datos/tarifas-2021-ene-nov.csv";
+    f.open(nombreFichero);
     if(f.is_open()){
-        
+        if(leerPrecios(nombreFichero, mesInicial, mesFinal, registros)){
+
+        }else{
+            cerr << "No se ha podido leer el fichero " <<'"'<<nombreFichero<<'"'<<"."<<endl;
+            return false;
+        }
+
     }else{
         cerr << "No se ha podido leer el fichero " <<'"'<<"tarifas-2021-ene-nov.csv"<<'"'<<"."<<endl;
         return false;
     }
-}
-
-
-void masBarato (){
-    cout << "El día completo más barato fue el ";
+    return true;
 }
 
 int diasTotales(int mesinicio, int mesfinal){
@@ -169,6 +172,41 @@ int diasTotales(int mesinicio, int mesfinal){
     return dias;
 
 }
+
+/*Fecha masBarato (int mesinicio, int mesfinal, GastoDiario registros[]){
+    double costes[diasTotales(mesinicio, mesfinal)];
+    for(int i=0; i<diasTotales(mesinicio, mesfinal); i++){
+        costes[i]=costeDiario(registros[i]);
+    }
+    double costeaux = costes[0];
+    unsigned diamasbarato=0;
+    for(int i=1; i<diasTotales(mesinicio, mesfinal); i++){
+        if(costeaux>costes[i]){
+            costeaux=costes[i];
+            diamasbarato=i;
+        }
+    }
+    Fecha masBarato;
+    for(int n=mesinicio; n<=mesfinal; n++){
+        while(diamasbarato>diasDelMes(n, 2021)){
+            diamasbarato = diamasbarato - diasDelMes(n, 2021);
+            masBarato.mes=n;
+        }
+    }
+    
+    masBarato.dia = diamasbarato;
+    
+    masBarato.agno = 2021;
+    return masBarato;
+}
+
+void mostrarPrimerRes(Fecha barato){
+
+    cout << "El día completo más barato fue el " << barato.dia << "-" << barato.mes << "-" << barato.agno << "." << endl;
+}*/
+
+
+
 
 /*
  * ¡ESCRIBID LA ESPECIFICACIÓN DE ESTA FUNCIÓN!
@@ -184,11 +222,15 @@ int main() {
     string rutaFicheros[elementos];
     fichBucle(usuario,mesinicio,mesfinal,rutaFicheros);
     string nombreEscritura;
-   
+    //unsigned numero = diasTotales(mesinicio,mesfinal);
     GastoDiario registros[diasTotales(mesinicio,mesfinal)];
     if(leerFichero(rutaFicheros, elementos,mesinicio,mesfinal,registros)){
         if(pedirNombreFichero(nombreEscritura)){
             escribirCabecera(mesinicio,mesfinal);
+            if(leerFichTafs(mesinicio, mesfinal, registros)){
+                //mostrarPrimerRes
+            }
+
             
         }else{
             //Escribir en fichero ficheros
@@ -198,7 +240,5 @@ int main() {
         return 1;
     }
 
-    
-    
     return 0;
 }
