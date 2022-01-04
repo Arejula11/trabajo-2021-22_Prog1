@@ -44,7 +44,7 @@ double costeMedio(const GastoDiario& gasto){
 double costeDiario(const GastoDiario& gasto){
     double gastoTotal = 0;
     for(int i=0;i<24;i++){
-        gastoTotal+=gasto.precioE[i]*gasto.consumoE[i];
+        gastoTotal+=(gasto.precioE[i]/1000)*gasto.consumoE[i];
 
     }
     return gastoTotal;
@@ -68,7 +68,7 @@ double costeDiarioMinimo(const GastoDiario& gasto){
         }
     }
     for(int i=0; i<24; i++){
-        costetotal= costetotal + preciomenor*gasto.consumoE[i];
+        costetotal+= (preciomenor/1000)*gasto.consumoE[i];
     }
     return costetotal;
 }

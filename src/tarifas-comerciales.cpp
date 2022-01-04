@@ -11,24 +11,25 @@ using namespace std;
 double costeDiarioTarifaPlanaTramos(const GastoDiario& gasto,
                                     const TarifaPlanaTramos tarifa){
     double costetotal=0;
-    for(int i=10;i<14;i++){
-        costetotal = costetotal + gasto.consumoE[i] * tarifa.punta;
-    }
-    for(int i=18;i<22;i++){
-        costetotal = costetotal + gasto.consumoE[i] * tarifa.punta;
+    for(int i=0;i<8;i++){
+        costetotal +=  gasto.consumoE[i] * tarifa.valle;
     }
     for(int i=8;i<10;i++){
-        costetotal = costetotal + gasto.consumoE[i] * tarifa.llano;
+        costetotal +=  gasto.consumoE[i] * tarifa.llano;
     }
-    for(int i=14;i<16;i++){
-        costetotal = costetotal + gasto.consumoE[i] * tarifa.llano;
+    for(int i=10;i<14;i++){
+        costetotal +=  gasto.consumoE[i] * tarifa.punta;
+    }
+    for(int i=14;i<18;i++){
+        costetotal +=  gasto.consumoE[i] * tarifa.llano;
+    }
+    for(int i=18;i<22;i++){
+        costetotal +=  gasto.consumoE[i] * tarifa.punta;
     }
     for(int i=20;i<24;i++){
-        costetotal = costetotal + gasto.consumoE[i] * tarifa.llano;
+        costetotal +=  gasto.consumoE[i] * tarifa.llano;
     }
-    for(int i=0;i<8;i++){
-        costetotal = costetotal + gasto.consumoE[i] * tarifa.valle;
-    }
+    
     return costetotal;
 
 }

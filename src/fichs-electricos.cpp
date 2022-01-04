@@ -155,7 +155,7 @@ bool leerConsumos(const string nombreCliente,
     fechaInicial.agno=2021;
     fechaInicial.mes=mesInicial;
     fechaInicial.dia=1;
-    unsigned hora;
+    unsigned hora=0;
     double consumo;
     string ignorar;
     unsigned diastrans;
@@ -164,7 +164,7 @@ bool leerConsumos(const string nombreCliente,
             getline(f,ignorar);
             while(leerConsumoHorario(f,fecha,hora,consumo)){
                 diastrans=diasTranscurridos(fechaInicial, fecha);
-                registros[diastrans].consumoE[hora]=consumo;
+                registros[diastrans].consumoE[hora-1]=consumo;
             }
             return true;
             }else{

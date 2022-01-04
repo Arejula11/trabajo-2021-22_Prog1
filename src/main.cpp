@@ -18,6 +18,7 @@
 \******************************************************************************/
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <string>
 #include "gasto-diario.hpp"
@@ -256,7 +257,48 @@ void masBarato (int mesinicio, int mesfinal, GastoDiario registros[]){
 }
 
 
+double gastoTotalE(GastoDiario registros[],unsigned mesinicial, unsigned mesfinal){
+    double gasto = 0;
+    
+    
+    for(int n=0;n<diasTotales(mesinicial,mesfinal);n++){
+        gasto+=costeDiario(registros[n]);
+        
 
+    }
+    
+    cout<<"El importe del consumo eléctrico en el periodo considerado ha sido de "<< fixed << setprecision(2)<< gasto <<" €"<<endl;
+    return gasto;
+}
+
+void gastoMinimoE(GastoDiario registros[], unsigned mesinicial, unsigned mesfinal,double gasto){
+    double gastom = 0;
+    
+    
+    for(int n=0;n<diasTotales(mesinicial,mesfinal);n++){
+        gastom+=costeDiarioMinimo(registros[n]);
+        
+
+    }
+    cout<< "El importe mínimo concentrando todo el consumo diario en la hora más barata habría sido de "
+    << fixed << setprecision(2)<<gastom<<" €"<<"(un "<<100-(gastom/gasto)*100<<" % menor)."<< endl;
+}
+
+void tarifaCabecera(){
+    cout<<"COSTE CON TARIFAS COMERCIALES"<<endl;
+    cout<<"Coste        Nombre de la tarifa"<<endl;
+    cout<<"--------------------------------------------"<<endl;
+}
+
+void tarifaPrecios( GastoDiario registros[], TarifaPlanaTramos tarifas[], unsigned mesinicio, unsigned mesfinal){
+    double preciostf[NUM_TARIFAS_COMERCIALES];
+    for(int i=0;i<NUM_TARIFAS_COMERCIALES; i++){
+            preciostf[i] = costeTarifaPlanaTramos(registros, diasTotales(mesinicio, mesfinal), tarifas[i]);
+            cout<<preciostf[i]<<"     "<<TARIFAS_COMERCIALES[i].nombre<<endl;
+
+    }
+    
+}
 
 
 
@@ -282,7 +324,16 @@ int main() {
             if(leerFichTafs(mesinicio, mesfinal, registros)){
                 
                 masBarato( mesinicio, mesfinal, registros);
-                masCaro( mesinicio, mesfinal, registros);          
+                masCaro( mesinicio, mesfinal, registros);    
+                cout<<endl;
+                double gastomax = gastoTotalE(registros,mesinicio,mesfinal);
+                gastoMinimoE(registros, mesinicio, mesfinal, gastomax);
+                tarifaCabecera();
+                TarifaPlanaTramos tarifas[NUM_TARIFAS_COMERCIALES];
+                for(int i=0; i<NUM_TARIFAS_COMERCIALES;i++){
+                    tarifas[i]=TARIFAS_COMERCIALES[i];
+                }
+                tarifaPrecios(registros,tarifas,mesinicio,mesfinal);
             }
 
             
