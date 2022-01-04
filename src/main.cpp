@@ -173,21 +173,32 @@ int diasTotales(int mesinicio, int mesfinal){
 
 }
 
-Fecha masCaro(unsigned& diamascaro, int mesinicio, int mesfinal, GastoDiario registros[]){
-    double costeshoras[diasTotales(mesinicio, mesfinal)*24];
+void mostrarPrimerResA(Fecha barato, GastoDiario registro[], unsigned& diamasbarato){
+    cout << "El día completo más barato fue el " << barato.dia+1 << "-" << barato.mes << "-" << barato.agno << ". Precio medio: "<< costeMedio(registro[diamasbarato])/1000 <<" €/kWh"<<endl; 
+    
+    
+}
+
+void mostrarPrimerResB(GastoDiario registro[],Fecha caro, unsigned& diamascaro){
+    cout << "La hora más cara tuvo lugar el " <<caro.dia+1<< "-" << caro.mes << "-" << caro.agno<<" a las "<< horaMasCara(registro[diamascaro]) << " . Precio: "<< registro[diamascaro].precioE[horaMasCara(registro[diamascaro])]/1000 << " €/kWh"<<endl;
+    
+}
+void masCaro( int mesinicio, int mesfinal, GastoDiario registros[]){
+    double costeshoras[diasTotales(mesinicio, mesfinal)];
+    unsigned diamascaro=0;
     for(int i=0;  i<diasTotales(mesinicio, mesfinal); i++){
         costeshoras[i]=registros[i].precioE[horaMasCara(registros[i])];
     }
     double costeaux = costeshoras[0];
     for(int i=1; i<diasTotales(mesinicio, mesfinal); i++){
-        if(costeaux>costeshoras[i]){
+        if(costeaux<costeshoras[i]){
             costeaux=costeshoras[i];
             diamascaro=i;
         }
     }
     cout << diamascaro << ", " << costeshoras[diamascaro] << endl;
     
-    
+    unsigned diaC=diamascaro;
     Fecha masCaro;
     for(int n=mesinicio; n<=mesfinal; n++){
         
@@ -203,13 +214,14 @@ Fecha masCaro(unsigned& diamascaro, int mesinicio, int mesfinal, GastoDiario reg
     masCaro.dia = diamascaro;
     
     masCaro.agno = 2021;
-    return masCaro;
+     cout << "La hora más cara tuvo lugar el " <<masCaro.dia+1<< "-" << masCaro.mes << "-" << masCaro.agno<<" a las "<< horaMasCara(registros[diaC]) 
+     << ":00"<< ". Precio: "<< costeshoras[diaC]/1000 << " €/kWh"<<endl;
 }
 
 
-Fecha masBarato (unsigned& diamasbarato, int mesinicio, int mesfinal, GastoDiario registros[]){
+void masBarato (int mesinicio, int mesfinal, GastoDiario registros[]){
     double costes[diasTotales(mesinicio, mesfinal)];
-    
+    unsigned diamasbarato=0;
     for(int i=0; i<diasTotales(mesinicio, mesfinal); i++){
         costes[i]=costeMedio(registros[i]);
         
@@ -224,7 +236,7 @@ Fecha masBarato (unsigned& diamasbarato, int mesinicio, int mesfinal, GastoDiari
     }
     cout << diamasbarato << ", " << costes[diamasbarato] << endl;
     
-    
+    unsigned diaB = diamasbarato;
     Fecha masBarato;
     for(int n=mesinicio; n<=mesfinal; n++){
         
@@ -240,14 +252,10 @@ Fecha masBarato (unsigned& diamasbarato, int mesinicio, int mesfinal, GastoDiari
     masBarato.dia = diamasbarato;
     
     masBarato.agno = 2021;
-    return masBarato;
+    cout << "El día completo más barato fue el " << masBarato.dia+1 << "-" << masBarato.mes << "-" << masBarato.agno << ". Precio medio: "<< costeMedio(registros[diaB])/1000 <<" €/kWh"<<endl;
 }
 
-void mostrarPrimerRes(Fecha barato, GastoDiario registro[], unsigned& diamasbarato,Fecha caro, unsigned& diamascaro){
-    cout << "El día completo más barato fue el " << barato.dia+1 << "-" << barato.mes << "-" << barato.agno << ". Precio medio: "<< costeMedio(registro[diamasbarato])/1000 <<" €/kWh"<<endl; 
-    cout << "La hora más cara tuvo lugar el " <<caro.dia+1<< "-" << caro.mes << "-" << caro.agno<<" a las "<<" . Precio: "<<" €/kWh"<<endl;
-    
-}
+
 
 
 
@@ -272,9 +280,9 @@ int main() {
         if(pedirNombreFichero(nombreEscritura)){
             escribirCabecera(mesinicio,mesfinal);
             if(leerFichTafs(mesinicio, mesfinal, registros)){
-                unsigned diamasbarato=0;
-                unsigned diamascaro=0;
-                mostrarPrimerRes(masBarato(diamasbarato, mesinicio, mesfinal, registros),registros, diamasbarato,masCaro(diamascaro, mesinicio, mesfinal, registros), diamascaro);
+                
+                masBarato( mesinicio, mesfinal, registros);
+                masCaro( mesinicio, mesfinal, registros);          
             }
 
             
