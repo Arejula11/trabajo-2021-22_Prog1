@@ -343,7 +343,12 @@ void escribirInforme(ostream& f,
                      const GastoDiario regDiarios[], const unsigned numRegs,
                      const string nombreCliente, 
                      const unsigned mesInicial, const unsigned mesFinal){
-    f<<"INFORME DEL CLIENTE "<< '"'<<"A"<<'"'<< " ENTRE LOS MESES "<<mesInicial<<" Y " << mesFinal << " DE 2021" << endl;
+string usuario = nombreCliente;
+    for( int i=0;i<=usuario.length();i++){
+    usuario[i] = toupper(usuario[i]);
+    }
+    
+    f<<"INFORME DEL CLIENTE "<< '"'<<usuario<<'"'<< " ENTRE LOS MESES "<<mesInicial<<" Y " << mesFinal << " DE 2021" << endl;
     f << "-------------------------------------------------------------------------------------" << endl;
     masBaratoF(mesInicial, mesFinal, regDiarios, f);
     masCaroF(mesInicial, mesFinal, regDiarios, f);
@@ -396,13 +401,8 @@ int main() {
     if(leerFichero(rutaFicheros, elementos,mesinicio,mesfinal,registros)){
         if(pedirNombreFichero(nombreEscritura)){
             cout<<endl;
-            
             if(leerFichTafs(mesinicio, mesfinal, registros)){
-            
-            
-            escribirInforme(cout,registros,diasTotales(mesinicio,mesfinal),usuario,mesinicio,mesfinal);
-                   
-            
+                escribirInforme(cout,registros,diasTotales(mesinicio,mesfinal),usuario,mesinicio,mesfinal);
             }
         }else{
             if(leerFichTafs(mesinicio, mesfinal, registros)){
