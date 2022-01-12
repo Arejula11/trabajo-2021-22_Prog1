@@ -25,30 +25,26 @@
 #include "fichs-electricos.hpp"
 #include "vector-gastos.hpp"
 #include "tarifas-comerciales.hpp"
-//#include "fecha.hpp"
+
 using namespace std;
 
 
 /*
- * Pre:  «f» es «cout» o un flujo de la clase «ofstream» asociado con un fichero
- *       externo abierto para escritura. Las «numRegs» primeras componentes
- *       del vector «regDiarios» contienen datos diarios de precios y consumo
- *       eléctricos de un determinado cliente de nombre «nombreCliente» entre
- *       los meses «mesInicial» y «mesFinal».
- * Post: Ha escrito en el flujo «f» el informe sobre consumo eléctrico indicado
- *       en el enunciado de este trabajo.
+ * Pre:  ---
+ * Post: asigna a las variables mesinicio y mesfinal los valores introducidos por el usuario.
  */
-void escribirInforme(ostream& f,
-                     const GastoDiario regDiarios[], const unsigned numRegs,
-                     const string nombreCliente, 
-                     const unsigned mesInicial, const unsigned mesFinal);
-
 void pedirmes(int& mesinicio, int& mesfinal){
     
     cout << "Escriba el mes inicial y el final: ";   
     cin >> mesinicio >> mesfinal;
 
 }
+
+/*
+ * Pre:  ---
+ * Post: Solicita al usuario que introduzca el nombre del cliente y los valores del primer mes y del último mes. 
+ * El programa asigna a las variables los valores introducidos por el usuario.
+ */
 void pedirDatos(string& usuario,int& mesinicio, int& mesfinal){
     cout << "Escriba el nombre del usuario: ";
     
@@ -78,7 +74,12 @@ void pedirDatos(string& usuario,int& mesinicio, int& mesfinal){
     }
 }
 
-string convRuta(string usuario, int mesinicio, int mesfinal){
+/*
+ * Pre:  ---
+ * Post: El programa utiliza la información solicitada al usuario(mes y nombre) 
+ * y devuelve una ruta para poder acceder al fichero correspondiente.
+ */
+string convRuta(string usuario, int mesinicio){
     string rutainicio="datos/";
     string rutayear="-2021-";
     string rutafinal=".csv";
@@ -90,26 +91,42 @@ string convRuta(string usuario, int mesinicio, int mesfinal){
         return rutainicio + usuario + rutayear + mes + rutafinal;
         
 }
-
+/*
+ * Pre:  ---
+ * Post: El programa crea la ruta de los ficheros que pertenecen a los meses que se encuentran dentro del intervalo
+ * determinado por el usuario.
+ */
 void fichBucle(string usuario, int mesinicio, int mesfinal, string rutaFicheros[]){
     int n=0;
     for(int i=mesinicio; i<=mesfinal; i++){
-        rutaFicheros[n]=convRuta(usuario, i, mesfinal);
+        rutaFicheros[n]=convRuta(usuario, i);
         n++;
     }
 }
+
+/*
+ * Pre:  ---
+ * Post: El programa solicta al usuario el nombre del fichero en el cual se escribirá el informe.
+ * El programa devuelve true si el usuario a escrito, en el caso que presione entrar se devuelve false.
+ */
 bool pedirNombreFichero(string& nombreEscritura){
 
     cout << "Escribe el nombre del fichero del informe"<<endl; 
     cout << "(presione solo ENTRAR para escribirlo en la pantalla: ";
-    cin >> nombreEscritura;
-    if(nombreEscritura== "salto"){
+    string ignorar;
+    getline(cin, ignorar);
+    getline(cin,nombreEscritura);
+    if(nombreEscritura== ""){
         return true;
     }else{
         return false;
     }
             
-
+/*
+ * Pre:  ---
+ * Post: El programa lee los ficheros que siguen la estructura <fichero-consumo> y
+ * en caso de que no sea posible leer el fichero el programa muestra en pantalla un mensaje de error. 
+ */
 }
 bool leerFichero(string rutaFicheros[], int elementos, int mesInicial, int mesFinal, GastoDiario registros[]){
     ifstream f;
@@ -117,14 +134,14 @@ bool leerFichero(string rutaFicheros[], int elementos, int mesInicial, int mesFi
         string nombreFichero=rutaFicheros[i];
         f.open(nombreFichero);
         if(f.is_open()){
-            //hay que cerrar los flujos
+            
             if(leerConsumos(nombreFichero,mesInicial,mesFinal,registros)){
                 
             }else{
                 cerr << "No se ha podido leer el fichero " <<'"'<<nombreFichero<<'"'<<"."<<endl;
                 return false;
             }
-            
+            f.close();
         }else{
             cerr << "No se ha podido leer el fichero " <<'"'<<nombreFichero<<'"'<<"."<<endl;
             return false;
@@ -134,17 +151,13 @@ bool leerFichero(string rutaFicheros[], int elementos, int mesInicial, int mesFi
     return true;
 }
 
-void crearFichero(string nombreFichero){
 
-    ofstream g;
-    g.open(nombreFichero);
-}
 
-void escribirCabecera(int mesinicio, int mesfinal){
-    cout<<"INFORME DEL CLIENTE "<< '"'<<"A"<<'"'<< " ENTRE LOS MESES "<<mesinicio<<" Y " << mesfinal << " DE 2021" << endl;
-    cout << "-------------------------------------------------------------------------------------" << endl;
-}
-
+/*
+ * Pre:  ---
+ * Post: El programa devuelve "true" si ha podido abrir el fichero de las tarifas y si ha podido leer 
+ * el fichero devuelvo "true" sino devuelve "false" e imprime en pantalla un mensaje del error correspondiente.
+ */
 bool leerFichTafs(int mesInicial, int mesFinal, GastoDiario registros[]){
     ifstream f;
     string nombreFichero = "datos/tarifas-2021-ene-nov.csv";
@@ -156,7 +169,7 @@ bool leerFichTafs(int mesInicial, int mesFinal, GastoDiario registros[]){
             cerr << "No se ha podido leer el fichero " <<'"'<<nombreFichero<<'"'<<"."<<endl;
             return false;
         }
-
+        f.close();
     }else{
         cerr << "No se ha podido leer el fichero " <<'"'<<"tarifas-2021-ene-nov.csv"<<'"'<<"."<<endl;
         return false;
@@ -164,6 +177,11 @@ bool leerFichTafs(int mesInicial, int mesFinal, GastoDiario registros[]){
     return true;
 }
 
+/*
+ * Pre:  ---
+ * Post: El programa devuelve un numero entero que indica el numero de dias que hay entre
+ *  el primer dia del primer mes hasta el último dí del último mes
+ */
 int diasTotales(int mesinicio, int mesfinal){
     int dias = 0;
     for (int i=mesinicio;i<=mesfinal;i++){
@@ -174,17 +192,13 @@ int diasTotales(int mesinicio, int mesfinal){
 
 }
 
-void mostrarPrimerResA(Fecha barato, GastoDiario registro[], unsigned& diamasbarato){
-    cout << "El día completo más barato fue el " << barato.dia+1 << "-" << barato.mes << "-" << barato.agno << ". Precio medio: "<< costeMedio(registro[diamasbarato])/1000 <<" €/kWh"<<endl; 
-    
-    
-}
 
-void mostrarPrimerResB(GastoDiario registro[],Fecha caro, unsigned& diamascaro){
-    cout << "La hora más cara tuvo lugar el " <<caro.dia+1<< "-" << caro.mes << "-" << caro.agno<<" a las "<< horaMasCara(registro[diamascaro]) << " . Precio: "<< registro[diamascaro].precioE[horaMasCara(registro[diamascaro])]/1000 << " €/kWh"<<endl;
-    
-}
-void masCaro( int mesinicio, int mesfinal, GastoDiario registros[]){
+
+/*
+ * Pre:  ---
+ * Post: El programa busca y escribe en el flujo «f» la hora más cara del periodo introducido por el usuario previamente, en que día ocurrió y cual fue su precio.
+ */
+void masCaroF( int mesinicio, int mesfinal, const GastoDiario registros[], ostream& f){
     double costeshoras[diasTotales(mesinicio, mesfinal)];
     unsigned diamascaro=0;
     for(int i=0;  i<diasTotales(mesinicio, mesfinal); i++){
@@ -197,7 +211,6 @@ void masCaro( int mesinicio, int mesfinal, GastoDiario registros[]){
             diamascaro=i;
         }
     }
-    cout << diamascaro << ", " << costeshoras[diamascaro] << endl;
     
     unsigned diaC=diamascaro;
     Fecha masCaro;
@@ -215,12 +228,16 @@ void masCaro( int mesinicio, int mesfinal, GastoDiario registros[]){
     masCaro.dia = diamascaro;
     
     masCaro.agno = 2021;
-     cout << "La hora más cara tuvo lugar el " <<masCaro.dia+1<< "-" << masCaro.mes << "-" << masCaro.agno<<" a las "<< horaMasCara(registros[diaC]) 
+     f << "La hora más cara tuvo lugar el " <<masCaro.dia+1<< "-" << masCaro.mes << "-" << masCaro.agno<<" a las "<< horaMasCara(registros[diaC]) 
      << ":00"<< ". Precio: "<< costeshoras[diaC]/1000 << " €/kWh"<<endl;
 }
 
 
-void masBarato (int mesinicio, int mesfinal, GastoDiario registros[]){
+/*
+ * Pre:  ---
+ * Post: El programa busca y escribe en el flujo «f» el dia mas barato del periodo introducido por el usuario y cual fue el coste medio del dia
+ */
+void masBaratoF (int mesinicio, int mesfinal, const GastoDiario registros[], ostream& f){
     double costes[diasTotales(mesinicio, mesfinal)];
     unsigned diamasbarato=0;
     for(int i=0; i<diasTotales(mesinicio, mesfinal); i++){
@@ -235,7 +252,7 @@ void masBarato (int mesinicio, int mesfinal, GastoDiario registros[]){
             diamasbarato=i;
         }
     }
-    cout << diamasbarato << ", " << costes[diamasbarato] << endl;
+    
     
     unsigned diaB = diamasbarato;
     Fecha masBarato;
@@ -253,11 +270,17 @@ void masBarato (int mesinicio, int mesfinal, GastoDiario registros[]){
     masBarato.dia = diamasbarato;
     
     masBarato.agno = 2021;
-    cout << "El día completo más barato fue el " << masBarato.dia+1 << "-" << masBarato.mes << "-" << masBarato.agno << ". Precio medio: "<< costeMedio(registros[diaB])/1000 <<" €/kWh"<<endl;
+    f << "El día completo más barato fue el " << masBarato.dia+1 << "-" << masBarato.mes << "-" 
+    << masBarato.agno << ". Precio medio: "<< fixed << setprecision(5) << costeMedio(registros[diaB])/1000 <<" €/kWh"<<endl;
 }
 
 
-double gastoTotalE(GastoDiario registros[],unsigned mesinicial, unsigned mesfinal){
+/*
+ * Pre:  ---
+ * Post: El programa calcula el gasto total del consumidor en el  periodo solicitado por el usuario
+ * y lo escribe en el flujo «f» asociado.
+ */
+double gastoTotalEF(const GastoDiario registros[],unsigned mesinicial, unsigned mesfinal, ostream& f){
     double gasto = 0;
     
     
@@ -267,11 +290,19 @@ double gastoTotalE(GastoDiario registros[],unsigned mesinicial, unsigned mesfina
 
     }
     
-    cout<<"El importe del consumo eléctrico en el periodo considerado ha sido de "<< fixed << setprecision(2)<< gasto <<" €"<<endl;
+    f<<"El importe del consumo eléctrico en el periodo considerado ha sido de "<< fixed << setprecision(2)<< gasto <<" €"<<endl;
     return gasto;
 }
 
-void gastoMinimoE(GastoDiario registros[], unsigned mesinicial, unsigned mesfinal,double gasto){
+
+
+/*
+ * Pre:  ---
+ * Post: El programa calcula el importe que hubiera supuesto si el precio de la luz hubiera sido siempre el precio 
+ * más barato del periodo introducido por el usuario y la diferencia entre el precio real y el hipotético.
+ * Además el programa escribe estos resultados en el flujo «f» asociado.
+ */
+void gastoMinimoEF(const GastoDiario registros[], unsigned mesinicial, unsigned mesfinal,double gasto, ostream& f){
     double gastom = 0;
     
     
@@ -280,30 +311,75 @@ void gastoMinimoE(GastoDiario registros[], unsigned mesinicial, unsigned mesfina
         
 
     }
-    cout<< "El importe mínimo concentrando todo el consumo diario en la hora más barata habría sido de "
+    f<< "El importe mínimo concentrando todo el consumo diario en la hora más barata habría sido de "
     << fixed << setprecision(2)<<gastom<<" €"<<"(un "<<100-(gastom/gasto)*100<<" % menor)."<< endl;
 }
 
-void tarifaCabecera(){
-    cout<<"COSTE CON TARIFAS COMERCIALES"<<endl;
-    cout<<"Coste        Nombre de la tarifa"<<endl;
-    cout<<"--------------------------------------------"<<endl;
-}
 
-void tarifaPrecios( GastoDiario registros[], TarifaPlanaTramos tarifas[], unsigned mesinicio, unsigned mesfinal){
+/*
+ * Pre:  ---
+ * Post: El programa calcula y escribe en el flujo «f» el coste correspondiente a cada tarifa.
+ */
+void tarifaPreciosF(const GastoDiario registros[], TarifaPlanaTramos tarifas[], unsigned mesinicio, unsigned mesfinal, ostream& f){
     double preciostf[NUM_TARIFAS_COMERCIALES];
     for(int i=0;i<NUM_TARIFAS_COMERCIALES; i++){
             preciostf[i] = costeTarifaPlanaTramos(registros, diasTotales(mesinicio, mesfinal), tarifas[i]);
-            cout<<preciostf[i]<<"     "<<TARIFAS_COMERCIALES[i].nombre<<endl;
+            f<<preciostf[i]<<"     "<<TARIFAS_COMERCIALES[i].nombre<<endl;
 
     }
     
 }
 
+/*
+ * Pre:  «f» es «cout» o un flujo de la clase «ofstream» asociado con un fichero
+ *       externo abierto para escritura. Las «numRegs» primeras componentes
+ *       del vector «regDiarios» contienen datos diarios de precios y consumo
+ *       eléctricos de un determinado cliente de nombre «nombreCliente» entre
+ *       los meses «mesInicial» y «mesFinal».
+ * Post: Ha escrito en el flujo «f» el informe sobre consumo eléctrico indicado
+ *       en el enunciado de este trabajo.
+ */
+void escribirInforme(ostream& f,
+                     const GastoDiario regDiarios[], const unsigned numRegs,
+                     const string nombreCliente, 
+                     const unsigned mesInicial, const unsigned mesFinal){
+    f<<"INFORME DEL CLIENTE "<< '"'<<"A"<<'"'<< " ENTRE LOS MESES "<<mesInicial<<" Y " << mesFinal << " DE 2021" << endl;
+    f << "-------------------------------------------------------------------------------------" << endl;
+    masBaratoF(mesInicial, mesFinal, regDiarios, f);
+    masCaroF(mesInicial, mesFinal, regDiarios, f);
+    f<<endl;
+    
+    double gastomax = gastoTotalEF(regDiarios,mesInicial,mesFinal, f);
+    gastoMinimoEF(regDiarios, mesInicial, mesFinal, gastomax, f);
+    f<<endl;
+    
+    TarifaPlanaTramos tarifas[NUM_TARIFAS_COMERCIALES];
+    for(int i=0; i<NUM_TARIFAS_COMERCIALES;i++){
+        tarifas[i]=TARIFAS_COMERCIALES[i];
+    }
+    tarifaPreciosF(regDiarios,tarifas,mesInicial,mesFinal, f);
+}
 
 
 /*
- * ¡ESCRIBID LA ESPECIFICACIÓN DE ESTA FUNCIÓN!
+ * Pre:  ---
+ * Post: El programa crea un fichero y escribe en él, el informe sobre consumo eléctrico indicado
+ *       en el enunciado de este trabajo.
+ */
+void crearFichero(string nombreFichero, GastoDiario regDiarios[], unsigned numRegs, string nombreCliente, unsigned mesInicial, unsigned mesFinal){
+
+    ofstream f;
+    f.open(nombreFichero);
+    escribirInforme(f, regDiarios, numRegs, nombreCliente, mesInicial, mesFinal);
+    
+}
+
+/*
+ * El programa uttiliza las funciones previamente descritas para solicitar al usuario el nombre
+ * del usuario y el periodo de tiempo. A partir de esos datos el programa lee los ficheros correspondientes 
+ * y extrae de ellos los datos necesarios para realizar un informe sobre el gasto del usuario en el periodo 
+ introducido por el usuario. El programa en funcion del usuario muestra en un pantalla este informe o crea un 
+ * fichero con el nombre que el usuario introduce y escribe en él el informe.
  */
 int main() {
     int mesinicio;
@@ -316,34 +392,31 @@ int main() {
     string rutaFicheros[elementos];
     fichBucle(usuario,mesinicio,mesfinal,rutaFicheros);
     string nombreEscritura;
-    //unsigned numero = diasTotales(mesinicio,mesfinal);
     GastoDiario registros[diasTotales(mesinicio,mesfinal)];
     if(leerFichero(rutaFicheros, elementos,mesinicio,mesfinal,registros)){
         if(pedirNombreFichero(nombreEscritura)){
-            escribirCabecera(mesinicio,mesfinal);
-            if(leerFichTafs(mesinicio, mesfinal, registros)){
-                
-                masBarato( mesinicio, mesfinal, registros);
-                masCaro( mesinicio, mesfinal, registros);    
-                cout<<endl;
-                double gastomax = gastoTotalE(registros,mesinicio,mesfinal);
-                gastoMinimoE(registros, mesinicio, mesfinal, gastomax);
-                tarifaCabecera();
-                TarifaPlanaTramos tarifas[NUM_TARIFAS_COMERCIALES];
-                for(int i=0; i<NUM_TARIFAS_COMERCIALES;i++){
-                    tarifas[i]=TARIFAS_COMERCIALES[i];
-                }
-                tarifaPrecios(registros,tarifas,mesinicio,mesfinal);
-            }
-
+            cout<<endl;
             
+            if(leerFichTafs(mesinicio, mesfinal, registros)){
+            
+            
+            escribirInforme(cout,registros,diasTotales(mesinicio,mesfinal),usuario,mesinicio,mesfinal);
+                   
+            
+            }
         }else{
-            //Escribir en fichero ficheros
-            //crearFichero(nombreEscritura);
+            if(leerFichTafs(mesinicio, mesfinal, registros)){
+                crearFichero(nombreEscritura, registros, diasTotales(mesinicio,mesfinal), usuario, mesinicio, mesfinal);
+            }
         }
     }else{
         return 1;
     }
+    
+    
 
     return 0;
+
+
 }
+
