@@ -31,7 +31,7 @@ using namespace std;
 
 /*
  * Pre:  ---
- * Post: asigna a las variables mesinicio y mesfinal los valores introducidos por el usuario.
+ * Post: Asigna a las variables mesinicio y mesfinal los valores introducidos por el usuario.
  */
 void pedirmes(int& mesinicio, int& mesfinal){
     
@@ -42,8 +42,9 @@ void pedirmes(int& mesinicio, int& mesfinal){
 
 /*
  * Pre:  ---
- * Post: Solicita al usuario que introduzca el nombre del cliente y los valores del primer mes y del último mes. 
- * El programa asigna a las variables los valores introducidos por el usuario.
+ * Post: Solicita al usuario que introduzca el nombre del cliente y los valores
+ *       del primer mes y del último mes. El programa asigna a las variables los valores
+ *       introducidos por el usuario.
  */
 void pedirDatos(string& usuario,int& mesinicio, int& mesfinal){
     cout << "Escriba el nombre del usuario: ";
@@ -77,7 +78,7 @@ void pedirDatos(string& usuario,int& mesinicio, int& mesfinal){
 /*
  * Pre:  ---
  * Post: El programa utiliza la información solicitada al usuario(mes y nombre) 
- * y devuelve una ruta para poder acceder al fichero correspondiente.
+ *       y devuelve una ruta para poder acceder al fichero correspondiente.
  */
 string convRuta(string usuario, int mesinicio){
     string rutainicio="datos/";
@@ -93,8 +94,8 @@ string convRuta(string usuario, int mesinicio){
 }
 /*
  * Pre:  ---
- * Post: El programa crea la ruta de los ficheros que pertenecen a los meses que se encuentran dentro del intervalo
- * determinado por el usuario.
+ * Post: El programa crea la ruta de los ficheros que pertenecen a los
+ *       meses que se encuentran dentro del intervalo determinado por el usuario.
  */
 void fichBucle(string usuario, int mesinicio, int mesfinal, string rutaFicheros[]){
     int n=0;
@@ -106,8 +107,9 @@ void fichBucle(string usuario, int mesinicio, int mesfinal, string rutaFicheros[
 
 /*
  * Pre:  ---
- * Post: El programa solicta al usuario el nombre del fichero en el cual se escribirá el informe.
- * El programa devuelve true si el usuario a escrito, en el caso que presione entrar se devuelve false.
+ * Post: El programa solicta al usuario el nombre del fichero 
+ *       en el cual se escribirá el informe. El programa devuelve
+ *       true si el usuario a escrito, en el caso que presione entrar se devuelve false.
  */
 bool pedirNombreFichero(string& nombreEscritura){
 
@@ -123,9 +125,10 @@ bool pedirNombreFichero(string& nombreEscritura){
     }
             
 /*
- * Pre:  ---
- * Post: El programa lee los ficheros que siguen la estructura <fichero-consumo> y
- * en caso de que no sea posible leer el fichero el programa muestra en pantalla un mensaje de error. 
+ * Pre:  
+ * Post: El programa lee los ficheros que siguen la estructura
+ *       <fichero-consumo> y en caso de que no sea posible leer 
+ *       el fichero el programa muestra en pantalla un mensaje de error. 
  */
 }
 bool leerFichero(string rutaFicheros[], int elementos, int mesInicial, int mesFinal, GastoDiario registros[]){
@@ -154,9 +157,11 @@ bool leerFichero(string rutaFicheros[], int elementos, int mesInicial, int mesFi
 
 
 /*
- * Pre:  ---
- * Post: El programa devuelve "true" si ha podido abrir el fichero de las tarifas y si ha podido leer 
- * el fichero devuelvo "true" sino devuelve "false" e imprime en pantalla un mensaje del error correspondiente.
+ * Pre:  
+ * Post: El programa devuelve "false" si no ha podido abrir el fichero
+ *       de las tarifas ni ha podido leer 
+ *       el fichero e imprime en pantalla un mensaje del error correspondiente. 
+ *       En caso contrariodevuelve "true"  y lee los ficheros correspondientes. 
  */
 bool leerFichTafs(int mesInicial, int mesFinal, GastoDiario registros[]){
     ifstream f;
@@ -179,8 +184,8 @@ bool leerFichTafs(int mesInicial, int mesFinal, GastoDiario registros[]){
 
 /*
  * Pre:  ---
- * Post: El programa devuelve un numero entero que indica el numero de dias que hay entre
- *  el primer dia del primer mes hasta el último dí del último mes
+ * Post: El programa devuelve un numero entero que indica el numero de dias 
+ *       que hay entre el primer dia del primer mes hasta el último dí del último mes
  */
 int diasTotales(int mesinicio, int mesfinal){
     int dias = 0;
@@ -195,8 +200,12 @@ int diasTotales(int mesinicio, int mesfinal){
 
 
 /*
- * Pre:  ---
- * Post: El programa busca y escribe en el flujo «f» la hora más cara del periodo introducido por el usuario previamente, en que día ocurrió y cual fue su precio.
+ * Pre:  Las  primeras componentes
+ *       del vector «registros» contienen datos diarios de precios y consumo
+ *       eléctricos de un determinado cliente de nombre «nombreCliente» entre
+ *       los meses «mesInicial» y «mesFinal».
+ * Post: El programa busca y escribe en el flujo «f» la hora más cara del periodo 
+ *       introducido por el usuario previamente, en que día ocurrió y cual fue su precio.
  */
 void masCaroF( int mesinicio, int mesfinal, const GastoDiario registros[], ostream& f){
     double costeshoras[diasTotales(mesinicio, mesfinal)];
@@ -234,8 +243,12 @@ void masCaroF( int mesinicio, int mesfinal, const GastoDiario registros[], ostre
 
 
 /*
- * Pre:  ---
- * Post: El programa busca y escribe en el flujo «f» el dia mas barato del periodo introducido por el usuario y cual fue el coste medio del dia
+ * Pre:  Las  primeras componentes
+ *       del vector «registros» contienen datos diarios de precios y consumo
+ *       eléctricos de un determinado cliente de nombre «nombreCliente» entre
+ *       los meses «mesInicial» y «mesFinal».
+ * Post: El programa busca y escribe en el flujo «f» el dia mas barato del periodo 
+ *       introducido por el usuario y cual fue el coste medio del dia
  */
 void masBaratoF (int mesinicio, int mesfinal, const GastoDiario registros[], ostream& f){
     double costes[diasTotales(mesinicio, mesfinal)];
@@ -276,20 +289,20 @@ void masBaratoF (int mesinicio, int mesfinal, const GastoDiario registros[], ost
 
 
 /*
- * Pre:  ---
- * Post: El programa calcula el gasto total del consumidor en el  periodo solicitado por el usuario
- * y lo escribe en el flujo «f» asociado.
+ * Pre:  Las  primeras componentes
+ *       del vector «registros» contienen datos diarios de precios y consumo
+ *       eléctricos de un determinado cliente de nombre «nombreCliente» entre
+ *       los meses «mesInicial» y «mesFinal».
+ * Post: El programa calcula el gasto total del consumidor en el  periodo solicitado 
+ *       por el usuario y lo escribe en el flujo «f» asociado.
  */
 double gastoTotalEF(const GastoDiario registros[],unsigned mesinicial, unsigned mesfinal, ostream& f){
     double gasto = 0;
-    
-    
     for(int n=0;n<diasTotales(mesinicial,mesfinal);n++){
         gasto+=costeDiario(registros[n]);
         
 
     }
-    
     f<<"El importe del consumo eléctrico en el periodo considerado ha sido de "<< fixed << setprecision(2)<< gasto <<" €"<<endl;
     return gasto;
 }
@@ -297,19 +310,19 @@ double gastoTotalEF(const GastoDiario registros[],unsigned mesinicial, unsigned 
 
 
 /*
- * Pre:  ---
- * Post: El programa calcula el importe que hubiera supuesto si el precio de la luz hubiera sido siempre el precio 
- * más barato del periodo introducido por el usuario y la diferencia entre el precio real y el hipotético.
- * Además el programa escribe estos resultados en el flujo «f» asociado.
+ * Pre:  Las  primeras componentes
+ *       del vector «registros» contienen datos diarios de precios y consumo
+ *       eléctricos de un determinado cliente de nombre «nombreCliente» entre
+ *       los meses «mesInicial» y «mesFinal».
+ * Post: El programa calcula el importe que hubiera supuesto si el precio de la
+ *       luz hubiera sido siempre el precio más barato del periodo introducido 
+ *       por el usuario y la diferencia entre el precio real y el hipotético.
+ *       Además el programa escribe estos resultados en el flujo «f» asociado.
  */
 void gastoMinimoEF(const GastoDiario registros[], unsigned mesinicial, unsigned mesfinal,double gasto, ostream& f){
     double gastom = 0;
-    
-    
     for(int n=0;n<diasTotales(mesinicial,mesfinal);n++){
         gastom+=costeDiarioMinimo(registros[n]);
-        
-
     }
     f<< "El importe mínimo concentrando todo el consumo diario en la hora más barata habría sido de "
     << fixed << setprecision(2)<<gastom<<" €"<<"(un "<<100-(gastom/gasto)*100<<" % menor)."<< endl;
@@ -317,7 +330,10 @@ void gastoMinimoEF(const GastoDiario registros[], unsigned mesinicial, unsigned 
 
 
 /*
- * Pre:  ---
+ * Pre:  Las  primeras componentes
+ *       del vector «registros» contienen datos diarios de precios y consumo
+ *       eléctricos de un determinado cliente de nombre «nombreCliente» entre
+ *       los meses «mesInicial» y «mesFinal».
  * Post: El programa calcula y escribe en el flujo «f» el coste correspondiente a cada tarifa.
  */
 void tarifaPreciosF(const GastoDiario registros[], TarifaPlanaTramos tarifas[], unsigned mesinicio, unsigned mesfinal, ostream& f){
@@ -325,9 +341,7 @@ void tarifaPreciosF(const GastoDiario registros[], TarifaPlanaTramos tarifas[], 
     for(int i=0;i<NUM_TARIFAS_COMERCIALES; i++){
             preciostf[i] = costeTarifaPlanaTramos(registros, diasTotales(mesinicio, mesfinal), tarifas[i]);
             f<<preciostf[i]<<"     "<<TARIFAS_COMERCIALES[i].nombre<<endl;
-
-    }
-    
+    }  
 }
 
 /*
@@ -346,8 +360,7 @@ void escribirInforme(ostream& f,
 string usuario = nombreCliente;
     for( int i=0;i<=usuario.length();i++){
     usuario[i] = toupper(usuario[i]);
-    }
-    
+    }  
     f<<"INFORME DEL CLIENTE "<< '"'<<usuario<<'"'<< " ENTRE LOS MESES "<<mesInicial<<" Y " << mesFinal << " DE 2021" << endl;
     f << "-------------------------------------------------------------------------------------" << endl;
     masBaratoF(mesInicial, mesFinal, regDiarios, f);
@@ -368,11 +381,10 @@ string usuario = nombreCliente;
 
 /*
  * Pre:  ---
- * Post: El programa crea un fichero y escribe en él, el informe sobre consumo eléctrico indicado
- *       en el enunciado de este trabajo.
+ * Post: El programa crea un fichero y escribe en él, el informe sobre consumo
+ *       eléctrico indicado en el enunciado de este trabajo.
  */
 void crearFichero(string nombreFichero, GastoDiario regDiarios[], unsigned numRegs, string nombreCliente, unsigned mesInicial, unsigned mesFinal){
-
     ofstream f;
     f.open(nombreFichero);
     escribirInforme(f, regDiarios, numRegs, nombreCliente, mesInicial, mesFinal);
@@ -380,24 +392,25 @@ void crearFichero(string nombreFichero, GastoDiario regDiarios[], unsigned numRe
 }
 
 /*
- * El programa uttiliza las funciones previamente descritas para solicitar al usuario el nombre
- * del usuario y el periodo de tiempo. A partir de esos datos el programa lee los ficheros correspondientes 
- * y extrae de ellos los datos necesarios para realizar un informe sobre el gasto del usuario en el periodo 
- introducido por el usuario. El programa en funcion del usuario muestra en un pantalla este informe o crea un 
- * fichero con el nombre que el usuario introduce y escribe en él el informe.
+ *       El programa utiliza las funciones previamente descritas para solicitar
+ *       al usuario el nombre del usuario y el periodo de tiempo. A partir de esos
+ *       datos el programa lee los ficheros correspondientes  y extrae de ellos los
+ *       datos necesarios para realizar un informe sobre el gasto del usuario en el periodo 
+ *       introducido por el usuario. El programa en funcion del usuario muestra en un pantalla 
+ *       este informe o crea un fichero con el nombre que el usuario introduce y escribe en él el informe.
  */
 int main() {
     int mesinicio;
     int mesfinal;
     string usuario;
-
     pedirDatos(usuario,mesinicio,mesfinal);
-    int elementos = mesfinal - mesinicio + 1;
 
+    int elementos = mesfinal - mesinicio + 1;
     string rutaFicheros[elementos];
     fichBucle(usuario,mesinicio,mesfinal,rutaFicheros);
     string nombreEscritura;
     GastoDiario registros[diasTotales(mesinicio,mesfinal)];
+
     if(leerFichero(rutaFicheros, elementos,mesinicio,mesfinal,registros)){
         if(pedirNombreFichero(nombreEscritura)){
             cout<<endl;
@@ -412,11 +425,6 @@ int main() {
     }else{
         return 1;
     }
-    
-    
-
     return 0;
-
-
 }
 
