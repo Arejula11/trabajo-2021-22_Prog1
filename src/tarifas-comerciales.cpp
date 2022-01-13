@@ -26,7 +26,7 @@ double costeDiarioTarifaPlanaTramos(const GastoDiario& gasto,
     for(int i=18;i<22;i++){
         costetotal +=  gasto.consumoE[i] * tarifa.punta;
     }
-    for(int i=20;i<24;i++){
+    for(int i=22;i<24;i++){
         costetotal +=  gasto.consumoE[i] * tarifa.llano;
     }
     
