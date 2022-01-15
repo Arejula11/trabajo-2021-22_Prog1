@@ -1,3 +1,8 @@
+/******************************************************************************\
+ * Programación 1. Trabajo obligatorio curso 2021-22
+ * Autores del trabajo: Pablo Ernesto Angusto Delgado y Miguel Aréjula Aísa
+\******************************************************************************/
+
 #include <string>
 #include "gasto-diario.hpp"
 #pragma once

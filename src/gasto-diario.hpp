@@ -1,5 +1,6 @@
 /******************************************************************************\
  * Programación 1. Trabajo obligatorio curso 2021-22
+ * Autores del trabajo: Pablo Ernesto Angusto Delgado y Miguel Aréjula Aísa
  * Autor: Miguel Ángel Latre
  * Ultima revisión: 5-12-2021
  * Resumen: Fichero de interfaz «gasto-diario.hpp» del módulo
