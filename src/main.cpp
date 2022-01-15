@@ -131,7 +131,8 @@ bool pedirNombreFichero(string& nombreEscritura){
  *       el fichero el programa muestra en pantalla un mensaje de error. 
  */
 }
-bool leerFichero(string rutaFicheros[], int elementos, int mesInicial, int mesFinal, GastoDiario registros[]){
+bool leerFichero(string rutaFicheros[], int elementos, int mesInicial,
+                 int mesFinal, GastoDiario registros[]){
     ifstream f;
     for(int i=0; i<elementos;i++){
         string nombreFichero=rutaFicheros[i];
@@ -237,7 +238,8 @@ void masCaroF( int mesinicio, int mesfinal, const GastoDiario registros[], ostre
     masCaro.dia = diamascaro;
     
     masCaro.agno = 2021;
-     f << "La hora más cara tuvo lugar el " <<masCaro.dia+1<< "-" << masCaro.mes << "-" << masCaro.agno<<" a las "<< horaMasCara(registros[diaC]) 
+     f << "La hora más cara tuvo lugar el " <<masCaro.dia+1<< "-" << masCaro.mes 
+     << "-" << masCaro.agno<<" a las "<< horaMasCara(registros[diaC])
      << ":00"<< ". Precio: "<< costeshoras[diaC]/1000 << " €/kWh"<<endl;
 }
 
@@ -284,7 +286,8 @@ void masBaratoF (int mesinicio, int mesfinal, const GastoDiario registros[], ost
     
     masBarato.agno = 2021;
     f << "El día completo más barato fue el " << masBarato.dia+1 << "-" << masBarato.mes << "-" 
-    << masBarato.agno << ". Precio medio: "<< fixed << setprecision(5) << costeMedio(registros[diaB])/1000 <<" €/kWh"<<endl;
+    << masBarato.agno << ". Precio medio: "<< fixed << setprecision(5) 
+    << costeMedio(registros[diaB])/1000 <<" €/kWh"<<endl;
 }
 
 
@@ -303,7 +306,8 @@ double gastoTotalEF(const GastoDiario registros[],unsigned mesinicial, unsigned 
         
 
     }
-    f<<"El importe del consumo eléctrico en el periodo considerado ha sido de "<< fixed << setprecision(2)<< gasto <<" €"<<endl;
+    f<<"El importe del consumo eléctrico en el periodo considerado ha sido de "<< fixed 
+    << setprecision(2)<< gasto <<" €"<<endl;
     return gasto;
 }
 
@@ -336,7 +340,8 @@ void gastoMinimoEF(const GastoDiario registros[], unsigned mesinicial, unsigned 
  *       los meses «mesInicial» y «mesFinal».
  * Post: El programa calcula y escribe en el flujo «f» el coste correspondiente a cada tarifa.
  */
-void tarifaPreciosF(const GastoDiario registros[], TarifaPlanaTramos tarifas[], unsigned mesinicio, unsigned mesfinal, ostream& f){
+void tarifaPreciosF(const GastoDiario registros[], TarifaPlanaTramos tarifas[], unsigned mesinicio,
+                     unsigned mesfinal, ostream& f){
     double preciostf[NUM_TARIFAS_COMERCIALES];
     for(int i=0;i<NUM_TARIFAS_COMERCIALES; i++){
             preciostf[i] = costeTarifaPlanaTramos(registros, diasTotales(mesinicio, mesfinal), tarifas[i]);
@@ -361,7 +366,8 @@ string usuario = nombreCliente;
     for( int i=0;i<=usuario.length();i++){
     usuario[i] = toupper(usuario[i]);
     }  
-    f<<"INFORME DEL CLIENTE "<< '"'<<usuario<<'"'<< " ENTRE LOS MESES "<<mesInicial<<" Y " << mesFinal << " DE 2021" << endl;
+    f<<"INFORME DEL CLIENTE "<< '"'<<usuario<<'"'<< " ENTRE LOS MESES "<<mesInicial<<" Y " << mesFinal
+     << " DE 2021" << endl;
     f << "-------------------------------------------------------------------------------------" << endl;
     masBaratoF(mesInicial, mesFinal, regDiarios, f);
     masCaroF(mesInicial, mesFinal, regDiarios, f);
@@ -384,7 +390,8 @@ string usuario = nombreCliente;
  * Post: El programa crea un fichero y escribe en él, el informe sobre consumo
  *       eléctrico indicado en el enunciado de este trabajo.
  */
-void crearFichero(string nombreFichero, GastoDiario regDiarios[], unsigned numRegs, string nombreCliente, unsigned mesInicial, unsigned mesFinal){
+void crearFichero(string nombreFichero, GastoDiario regDiarios[], unsigned numRegs,
+                  string nombreCliente, unsigned mesInicial, unsigned mesFinal){
     ofstream f;
     f.open(nombreFichero);
     escribirInforme(f, regDiarios, numRegs, nombreCliente, mesInicial, mesFinal);
